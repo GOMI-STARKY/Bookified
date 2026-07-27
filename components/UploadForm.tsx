@@ -82,33 +82,57 @@ const UploadForm = () => {
 
             // Step 1: Parse PDF
             setCurrentStep('parsing');
-            const parsedPDF = await parsePDFFile(pdfFile);
+            let parsedPDF;
+            try {
+                parsedPDF = await parsePDFFile(pdfFile);
+            } catch (e) {
+                const msg = e instanceof Error ? e.message : 'Failed to parse PDF file';
+                setUploadError(msg);
+                toast.error(msg);
+                return;
+            }
             advanceStep('parsing');
 
             if(parsedPDF.content.length === 0) {
-                setUploadError("Failed to parse PDF. Please try again with a different file.");
-                toast.error("Failed to parse PDF. Please try again with a different file.");
+                const msg = "No readable text found in this PDF. It may be a scanned image — please try a different file.";
+                setUploadError(msg);
+                toast.error(msg);
                 return;
             }
 
             // Step 2: Upload PDF file
             setCurrentStep('uploading-file');
-            const uploadedPdf = await uploadFile(pdfFile);
+            let uploadedPdf;
+            try {
+                uploadedPdf = await uploadFile(pdfFile);
+            } catch (e) {
+                const msg = e instanceof Error ? e.message : 'Failed to upload PDF file';
+                setUploadError(msg);
+                toast.error(msg);
+                return;
+            }
             advanceStep('uploading-file');
 
             // Step 3: Upload cover
             setCurrentStep('uploading-cover');
             let coverUrl: string;
 
-            if(data.coverImage) {
-                const uploadedCover = await uploadFile(data.coverImage);
-                coverUrl = uploadedCover.url;
-            } else {
-                const response = await fetch(parsedPDF.cover);
-                const blob = await response.blob();
-                const coverFile = new File([blob], `${fileTitle}_cover.png`, { type: 'image/png' });
-                const uploadedCover = await uploadFile(coverFile);
-                coverUrl = uploadedCover.url;
+            try {
+                if(data.coverImage) {
+                    const uploadedCover = await uploadFile(data.coverImage);
+                    coverUrl = uploadedCover.url;
+                } else {
+                    const response = await fetch(parsedPDF.cover);
+                    const blob = await response.blob();
+                    const coverFile = new File([blob], `${fileTitle}_cover.png`, { type: 'image/png' });
+                    const uploadedCover = await uploadFile(coverFile);
+                    coverUrl = uploadedCover.url;
+                }
+            } catch (e) {
+                const msg = e instanceof Error ? e.message : 'Failed to upload cover image';
+                setUploadError(msg);
+                toast.error(msg);
+                return;
             }
             advanceStep('uploading-cover');
 
@@ -126,8 +150,13 @@ const UploadForm = () => {
             });
 
             if(!book.success) {
-                setUploadError(book.error as string || "Failed to create book");
-                toast.error(book.error as string || "Failed to create book");
+                const msg = typeof book.error === 'string'
+                    ? book.error
+                    : book.error instanceof Error
+                        ? book.error.message
+                        : "Failed to save book to database. Please try again.";
+                setUploadError(msg);
+                toast.error(msg);
                 if (book.isBillingError) {
                     router.push("/subscriptions");
                 }
@@ -147,9 +176,10 @@ const UploadForm = () => {
             const segments = await saveBookSegments(book.data._id, userId, parsedPDF.content);
 
             if(!segments.success) {
-                setUploadError("Failed to save book segments");
-                toast.error("Failed to save book segments");
-                throw new Error("Failed to save book segments");
+                const msg = "Book was created but segments could not be saved. Your book may still work.";
+                setUploadError(msg);
+                toast.error(msg);
+                return;
             }
             advanceStep('saving-segments');
 
@@ -157,9 +187,10 @@ const UploadForm = () => {
             form.reset();
             router.push('/');
         } catch (error) {
-            console.error(error);
-            setUploadError("Failed to upload book. Please try again later.");
-            toast.error("Failed to upload book. Please try again later.");
+            console.error('Upload flow error:', error);
+            const msg = error instanceof Error ? error.message : "An unexpected error occurred. Please try again.";
+            setUploadError(msg);
+            toast.error(msg);
         } finally {
             setIsSubmitting(false);
         }

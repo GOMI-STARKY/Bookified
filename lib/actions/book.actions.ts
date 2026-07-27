@@ -59,7 +59,7 @@ export const checkBookExists = async (title: string) => {
     } catch (e) {
         console.error('Error checking book exists', e);
         return {
-            exists: false, error: e
+            exists: false
         }
     }
 }
@@ -80,31 +80,34 @@ export const createBook = async (data: CreateBook) => {
             }
         }
 
-        // Todo: Check subscription limits before creating a book
-        const { getUserPlan } = await import("@/lib/subscription.server");
-        const { PLAN_LIMITS } = await import("@/lib/subscription-constants");
-
         const { auth } = await import("@clerk/nextjs/server");
         const { userId } = await auth();
 
         if (!userId || userId !== data.clerkId) {
-            return { success: false, error: "Unauthorized" };
+            return { success: false, error: "You must be signed in to create a book." };
         }
 
-        const plan = await getUserPlan();
-        const limits = PLAN_LIMITS[plan];
+        try {
+            const { getUserPlan } = await import("@/lib/subscription.server");
+            const { PLAN_LIMITS } = await import("@/lib/subscription-constants");
 
-        const bookCount = await Book.countDocuments({ clerkId: userId });
+            const plan = await getUserPlan();
+            const limits = PLAN_LIMITS[plan];
 
-        if (bookCount >= limits.maxBooks) {
-            const { revalidatePath } = await import("next/cache");
-            revalidatePath("/");
+            const bookCount = await Book.countDocuments({ clerkId: userId });
 
-            return {
-                success: false,
-                error: `You have reached the maximum number of books allowed for your ${plan} plan (${limits.maxBooks}). Please upgrade to add more books.`,
-                isBillingError: true,
-            };
+            if (bookCount >= limits.maxBooks) {
+                const { revalidatePath } = await import("next/cache");
+                revalidatePath("/");
+
+                return {
+                    success: false,
+                    error: `You have reached the maximum number of books allowed for your ${plan} plan (${limits.maxBooks}). Please upgrade to add more books.`,
+                    isBillingError: true,
+                };
+            }
+        } catch (planError) {
+            console.warn('Subscription check failed, allowing book creation:', planError);
         }
 
         const book = await Book.create({...data, clerkId: userId, slug, totalSegments: 0});
@@ -116,9 +119,17 @@ export const createBook = async (data: CreateBook) => {
     } catch (e) {
         console.error('Error creating a book', e);
 
+        const message = e instanceof Error ? e.message : String(e);
+        if (message.includes('MONGODB_URI') || message.includes('connection') || message.includes('ECONNREFUSED')) {
+            return {
+                success: false,
+                error: 'Database connection failed. Please try again later.',
+            };
+        }
+
         return {
             success: false,
-            error: e,
+            error: message || 'Failed to create book. Please try again.',
         }
     }
 }
@@ -187,9 +198,10 @@ export const saveBookSegments = async (bookId: string, clerkId: string, segments
     } catch (e) {
         console.error('Error saving book segments', e);
 
+        const message = e instanceof Error ? e.message : String(e);
         return {
             success: false,
-            error: e,
+            error: message || 'Failed to save book segments',
         }
     }
 }

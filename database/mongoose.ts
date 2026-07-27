@@ -14,7 +14,7 @@ export const connectToDatabase = async () => {
 
     const MONGODB_URI = process.env.MONGODB_URI;
 
-    if (!MONGODB_URI) throw new Error('MONGODB_URI is not configured');
+    if (!MONGODB_URI) throw new Error('MONGODB_URI is not configured. Please set it in your environment variables.');
 
     if (!cached.promise) {
         cached.promise = mongoose.connect(MONGODB_URI, { bufferCommands: false });

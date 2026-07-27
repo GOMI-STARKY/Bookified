@@ -91,50 +91,75 @@ export const formatDuration = (seconds: number): string => {
 };
 
 export async function parsePDFFile(file: File) {
-  try {
-    const pdfjsLib = await import('pdfjs-dist');
+  const pdfjsLib = await import('pdfjs-dist');
 
-    if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined') {
+    try {
       pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
           'pdfjs-dist/build/pdf.worker.min.mjs',
           import.meta.url,
       ).toString();
+    } catch {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = '';
     }
+  }
 
-    // Read file as array buffer
-    const arrayBuffer = await file.arrayBuffer();
+  const arrayBuffer = await file.arrayBuffer();
 
-    // Load PDF document
-    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-    const pdfDocument = await loadingTask.promise;
+  let pdfDocument: Awaited<ReturnType<typeof pdfjsLib.getDocument>>['promise'];
+  try {
+    const loadingTask = pdfjsLib.getDocument({
+      data: arrayBuffer,
+      useSystemFonts: true,
+      disableFontFace: true,
+    });
+    pdfDocument = await loadingTask.promise;
+  } catch (e) {
+    throw new Error(`Cannot open this PDF. It may be encrypted or damaged. ${(e as Error).message}`);
+  }
 
-    // Render first page as cover image
+  let coverDataURL = '';
+  try {
     const firstPage = await pdfDocument.getPage(1);
-    const viewport = firstPage.getViewport({ scale: 2 }); // 2x scale for better quality
+    const viewport = firstPage.getViewport({ scale: 2 });
 
     const canvas = document.createElement('canvas');
     canvas.width = viewport.width;
     canvas.height = viewport.height;
     const context = canvas.getContext('2d');
 
-    if (!context) {
-      throw new Error('Could not get canvas context');
+    if (context) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (firstPage as any).render({
+        canvasContext: context,
+        viewport,
+        canvas,
+      }).promise;
+
+      coverDataURL = canvas.toDataURL('image/png');
     }
+  } catch (e) {
+    console.warn('Could not render cover page, using blank cover:', e);
+    const canvas = document.createElement('canvas');
+    canvas.width = 600;
+    canvas.height = 800;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.fillStyle = '#212a3b';
+      ctx.fillRect(0, 0, 600, 800);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 36px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Book Cover', 300, 400);
+      coverDataURL = canvas.toDataURL('image/png');
+    }
+  }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await (firstPage as any).render({
-      canvasContext: context,
-      viewport,
-      canvas,
-    }).promise;
+  let fullText = '';
+  const numPages = pdfDocument.numPages;
 
-    // Convert canvas to data URL
-    const coverDataURL = canvas.toDataURL('image/png');
-
-    // Extract text from all pages
-    let fullText = '';
-
-    for (let pageNum = 1; pageNum <= pdfDocument.numPages; pageNum++) {
+  for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+    try {
       const page = await pdfDocument.getPage(pageNum);
       const textContent = await page.getTextContent();
       const pageText = textContent.items
@@ -142,20 +167,22 @@ export async function parsePDFFile(file: File) {
           .map((item) => (item as { str: string }).str)
           .join(' ');
       fullText += pageText + '\n';
+    } catch (e) {
+      console.warn(`Could not extract text from page ${pageNum}:`, e);
     }
-
-    // Split text into segments for search
-    const segments = splitIntoSegments(fullText);
-
-    // Clean up PDF document resources
-    await pdfDocument.destroy();
-
-    return {
-      content: segments,
-      cover: coverDataURL,
-    };
-  } catch (error) {
-    console.error('Error parsing PDF:', error);
-    throw new Error(`Failed to parse PDF file: ${error instanceof Error ? error.message : String(error)}`);
   }
+
+  await pdfDocument.destroy();
+
+  const trimmedText = fullText.trim();
+  if (!trimmedText) {
+    throw new Error('This PDF has no extractable text. It may be a scanned image or have an unsupported format. Please try a different PDF.');
+  }
+
+  const segments = splitIntoSegments(trimmedText);
+
+  return {
+    content: segments,
+    cover: coverDataURL,
+  };
 }
