@@ -18,16 +18,14 @@ import { toast } from 'sonner';
 import {checkBookExists, createBook, saveBookSegments} from "@/lib/actions/book.actions";
 import {useRouter} from "next/navigation";
 import {parsePDFFile} from "@/lib/utils";
+import {upload as blobUpload} from "@vercel/blob/client";
 
 async function uploadFile(file: File): Promise<{ url: string; pathname: string }> {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const res = await fetch('/api/upload', { method: 'POST', body: formData });
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(data.error || 'Upload failed');
-    return data;
+    const blob = await blobUpload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/blob/handle-upload',
+    });
+    return { url: blob.url, pathname: blob.pathname };
 }
 
 const UploadForm = () => {
