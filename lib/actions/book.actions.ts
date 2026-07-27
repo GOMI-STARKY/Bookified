@@ -119,7 +119,15 @@ export const createBook = async (data: CreateBook) => {
     } catch (e) {
         console.error('Error creating a book', e);
 
-        const message = e instanceof Error ? e.message : String(e);
+        let message = 'Failed to create book. Please try again.';
+        if (e instanceof Error) {
+            message = e.message;
+        } else if (typeof e === 'string') {
+            message = e;
+        } else if (e && typeof e === 'object' && 'message' in e) {
+            message = String((e as { message: unknown }).message);
+        }
+
         if (message.includes('MONGODB_URI') || message.includes('connection') || message.includes('ECONNREFUSED')) {
             return {
                 success: false,
@@ -129,7 +137,7 @@ export const createBook = async (data: CreateBook) => {
 
         return {
             success: false,
-            error: message || 'Failed to create book. Please try again.',
+            error: message,
         }
     }
 }
@@ -198,10 +206,17 @@ export const saveBookSegments = async (bookId: string, clerkId: string, segments
     } catch (e) {
         console.error('Error saving book segments', e);
 
-        const message = e instanceof Error ? e.message : String(e);
+        let message = 'Failed to save book segments';
+        if (e instanceof Error) {
+            message = e.message;
+        } else if (typeof e === 'string') {
+            message = e;
+        } else if (e && typeof e === 'object' && 'message' in e) {
+            message = String((e as { message: unknown }).message);
+        }
         return {
             success: false,
-            error: message || 'Failed to save book segments',
+            error: message,
         }
     }
 }

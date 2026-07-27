@@ -150,7 +150,13 @@ const UploadForm = () => {
             });
 
             if(!book.success) {
-                const msg = String(book.error || "Failed to save book to database. Please try again.");
+                const errObj = book.error as unknown;
+                let msg = "Failed to save book to database. Please try again.";
+                if (typeof errObj === 'string' && errObj) {
+                    msg = errObj;
+                } else if (errObj && typeof errObj === 'object' && 'message' in errObj) {
+                    msg = String((errObj as { message: unknown }).message);
+                }
                 setUploadError(msg);
                 toast.error(msg);
                 if (book.isBillingError) {
@@ -172,7 +178,10 @@ const UploadForm = () => {
             const segments = await saveBookSegments(book.data._id, userId, parsedPDF.content);
 
             if(!segments.success) {
-                const msg = "Book was created but segments could not be saved. Your book may still work.";
+                let msg = "Book was created but segments could not be saved. Your book may still work.";
+                if (typeof segments.error === 'string' && segments.error) {
+                    msg = `Segments error: ${segments.error}`;
+                }
                 setUploadError(msg);
                 toast.error(msg);
                 return;
