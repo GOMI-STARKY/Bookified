@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "mongodb": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-mongodb"],
+      "env": {
+        "MONGODB_URI": "${MONGODB_URI}"
+      }
+    },
+    "vapi": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-vapi"],
+      "env": {
+        "VAPI_API_KEY": "${NEXT_PUBLIC_VAPI_API_KEY}"
+      }
+    }
+  }
+}
