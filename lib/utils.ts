@@ -106,7 +106,8 @@ export async function parsePDFFile(file: File) {
 
   const arrayBuffer = await file.arrayBuffer();
 
-  let pdfDocument: Awaited<ReturnType<typeof pdfjsLib.getDocument>>['promise'];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let pdfDocument: any;
   try {
     const loadingTask = pdfjsLib.getDocument({
       data: arrayBuffer,
@@ -163,8 +164,8 @@ export async function parsePDFFile(file: File) {
       const page = await pdfDocument.getPage(pageNum);
       const textContent = await page.getTextContent();
       const pageText = textContent.items
-          .filter((item) => 'str' in item)
-          .map((item) => (item as { str: string }).str)
+          .filter((item: Record<string, unknown>) => 'str' in item)
+          .map((item: Record<string, unknown>) => String(item.str ?? ''))
           .join(' ');
       fullText += pageText + '\n';
     } catch (e) {

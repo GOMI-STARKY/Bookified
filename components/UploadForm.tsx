@@ -150,11 +150,7 @@ const UploadForm = () => {
             });
 
             if(!book.success) {
-                const msg = typeof book.error === 'string'
-                    ? book.error
-                    : book.error instanceof Error
-                        ? book.error.message
-                        : "Failed to save book to database. Please try again.";
+                const msg = String(book.error || "Failed to save book to database. Please try again.");
                 setUploadError(msg);
                 toast.error(msg);
                 if (book.isBillingError) {
