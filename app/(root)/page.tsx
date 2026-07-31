@@ -2,11 +2,19 @@ import HeroSection from "@/components/HeroSection";
 import BookCard from "@/components/BookCard";
 import {getAllBooks} from "@/lib/actions/book.actions";
 import Search from "@/components/Search";
+import {auth} from "@clerk/nextjs/server";
+import {redirect} from "next/navigation";
 
 const Page = async ({ searchParams }: { searchParams: Promise<{ query?: string }> }) => {
+    const { userId } = await auth();
+
+    if (!userId) {
+        redirect("/sign-in");
+    }
+
     const { query } = await searchParams;
 
-    const bookResults = await getAllBooks(query)
+    const bookResults = await getAllBooks(query, userId)
     const books = bookResults.success ? bookResults.data ?? [] : []
 
     return (

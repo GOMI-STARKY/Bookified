@@ -7,21 +7,23 @@ import Book from "@/database/models/book.model";
 import BookSegment from "@/database/models/book-segment.model";
 import mongoose from "mongoose";
 
-export const getAllBooks = async (search?: string) => {
+export const getAllBooks = async (search?: string, clerkId?: string) => {
     try {
         await connectToDatabase();
 
-        let query = {};
+        const query: Record<string, unknown> = {};
+
+        if (clerkId) {
+            query.clerkId = clerkId;
+        }
 
         if (search) {
             const escapedSearch = escapeRegex(search);
             const regex = new RegExp(escapedSearch, 'i');
-            query = {
-                $or: [
-                    { title: { $regex: regex } },
-                    { author: { $regex: regex } },
-                ]
-            };
+            query.$or = [
+                { title: { $regex: regex } },
+                { author: { $regex: regex } },
+            ];
         }
 
         const books = await Book.find(query).sort({ createdAt: -1 }).lean();
