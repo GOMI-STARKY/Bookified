@@ -11,12 +11,23 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     const body: HandleUploadBody = await request.json();
 
+    console.log("Blob handle-upload: generating token for user", userId);
+
     const result = await handleUpload({
       body,
       request,
       token: process.env.BLOB_READ_WRITE_TOKEN,
       onBeforeGenerateToken: async () => {
-        return {};
+        return {
+          allowedContentTypes: [
+            "application/pdf",
+            "image/png",
+            "image/jpeg",
+            "image/jpg",
+            "image/webp",
+          ],
+          maximumSizeInBytes: 50 * 1024 * 1024,
+        };
       },
     });
 
