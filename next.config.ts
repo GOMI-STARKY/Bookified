@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
         }
         return config;
     },
+    // Next 16 uses Turbopack by default; declare it so the webpack config above
+    // (dev-only workaround) doesn't abort production builds.
+    turbopack: {},
     experimental: {
         proxyClientMaxBodySize: '100mb',
         serverActions: {
