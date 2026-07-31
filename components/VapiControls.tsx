@@ -2,6 +2,8 @@
 
 import {Mic, MicOff} from "lucide-react";
 import useVapi from "@/hooks/useVapi";
+import {useSubscription} from "@/hooks/useSubscription";
+import {PLANS} from "@/lib/subscription-constants";
 import {IBook} from "@/types";
 import Image from "next/image";
 import Transcript from "@/components/Transcript";
@@ -12,6 +14,7 @@ import {useEffect} from "react";
 
 const VapiControls = ({ book }: { book: IBook }) => {
     const { status, isActive, messages, currentMessage, currentUserMessage, duration, start, stop, clearError, limitError, isBillingError, maxDurationSeconds } = useVapi(book)
+    const { plan } = useSubscription();
     const router = useRouter();
 
     useEffect(() => {
@@ -96,6 +99,12 @@ const VapiControls = ({ book }: { book: IBook }) => {
                             <div className="vapi-status-indicator">
                                 <span className="vapi-status-text">
                                     {formatDuration(duration)}/{formatDuration(maxDurationSeconds)}
+                                </span>
+                            </div>
+
+                            <div className="vapi-status-indicator">
+                                <span className="vapi-status-text">
+                                    {plan === PLANS.FREE ? "Free 100-page preview" : "Full book access"}
                                 </span>
                             </div>
                         </div>

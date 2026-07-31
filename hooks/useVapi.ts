@@ -266,7 +266,7 @@ export function useVapi(book: IBook) {
 
             const contentLabel = isPaid
                 ? `Here is the opening of the book. The user may ask about any part of it — including sections beyond this opening.`
-                : `Here is part of the book content (the free preview, roughly the first 200 pages).`;
+                : `Here is part of the book content (the free 100-page preview).`;
 
             const systemPrompt = `You are a knowledgeable book assistant for the app Bookified. You are discussing the book "${book.title}" by ${book.author}.
 
