@@ -160,6 +160,32 @@
 
   /* Brand color - terracotta */
   --blue: #c8553d;
+
+  /* Warm literary palette - dark mode */
+  --bg-primary: #1a1918;
+  --bg-secondary: #2d2a26;
+  --bg-tertiary: #252321;
+  --bg-card: #252321;
+
+  --text-primary: #f7f4ee;
+  --text-secondary: #a8a09a;
+  --text-muted: #8a847a;
+
+  --accent-warm: #f7f4ee;
+  --accent-warm-hover: #c9c2b8;
+  --accent-light: #2d2a26;
+
+  --border-subtle: rgba(247, 244, 238, 0.1);
+  --border-medium: rgba(247, 244, 238, 0.2);
+
+  --color-brand: #c8553d;
+  --color-brand-hover: #d96043;
+
+  --shadow-soft-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.6);
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-soft-md: 0 2px 4px rgba(0, 0, 0, 0.5), 0 8px 16px rgba(0, 0, 0, 0.6);
+  --shadow-soft-lg: 0 4px 12px rgba(0, 0, 0, 0.6), 0 16px 32px rgba(0, 0, 0, 0.7);
+  --shadow-book: 0px 10px 30px 0px rgba(0, 0, 0, 0.5);
 }
 
 @layer base {
@@ -212,7 +238,7 @@
     @apply relative z-20 flex flex-col justify-center items-center p-7;
   }
   .form-btn {
-    @apply !w-full h-14 rounded-[10px] bg-[#663820] cursor-pointer hover:bg-[#7a4528] text-xl text-white font-bold transition-colors;
+    @apply !w-full h-14 rounded-[10px] bg-[var(--color-brand)] cursor-pointer hover:bg-[#7a4528] text-xl text-white font-bold transition-colors;
     font-family: 'IBM Plex Serif', serif;
   }
   .loading-wrapper {
@@ -277,7 +303,7 @@
     font-family: 'IBM Plex Serif', serif;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-white hover:bg-gray-50 text-[var(--text-secondary)] font-medium rounded-[10px] transition-colors;
+    @apply inline-flex items-center justify-center px-6 py-3 bg-[var(--bg-card)] hover:bg-[var(--bg-secondary)] text-[var(--text-secondary)] font-medium rounded-[10px] transition-colors;
   }
 
   /* Layout utilities */
@@ -293,13 +319,13 @@
     @apply border-[var(--color-brand)];
   }
   .page-title-xl {
-    @apply text-4xl md:text-5xl font-semibold text-black tracking-[-0.02em] leading-[54px] font-serif;
+    @apply text-4xl md:text-5xl font-semibold text-[var(--text-primary)] tracking-[-0.02em] leading-[54px] font-serif;
   }
   .section-title {
-    @apply text-2xl md:text-[30px] font-semibold text-black leading-[30px] font-serif;
+    @apply text-2xl md:text-[30px] font-semibold text-[var(--text-primary)] leading-[30px] font-serif;
   }
   .book-title-lg {
-    @apply text-[30px] font-semibold text-black leading-9 mb-2 font-serif;
+    @apply text-[30px] font-semibold text-[var(--text-primary)] leading-9 mb-2 font-serif;
   }
   .subtitle {
     @apply text-xl text-[var(--text-secondary)] leading-7;
@@ -312,7 +338,7 @@
      NAVBAR COMPONENT
      =========================================== */
   .logo-text {
-    @apply font-semibold text-xl hidden sm:block text-black;
+    @apply font-semibold text-xl hidden sm:block text-[var(--text-primary)];
   }
   .nav-link-base {
     @apply text-base font-medium leading-6 transition-all;
@@ -321,13 +347,13 @@
     @apply text-[var(--color-brand)] border-b-2 border-[var(--color-brand)] pb-0.5;
   }
   .nav-btn {
-    @apply text-base font-medium text-black hover:opacity-70 transition-opacity cursor-pointer;
+    @apply text-base font-medium text-[var(--text-primary)] hover:opacity-70 transition-opacity cursor-pointer;
   }
   .nav-user-link {
     @apply flex items-center gap-1 hover:opacity-70 transition-opacity;
   }
   .nav-user-name {
-    @apply hidden sm:inline text-base font-medium text-black;
+    @apply hidden sm:inline text-base font-medium text-[var(--text-primary)];
   }
 
   /* ===========================================
@@ -384,10 +410,10 @@
      VAPI CONTROLS COMPONENT
      =========================================== */
   .vapi-header-card {
-    @apply flex items-center gap-6 bg-[#f3e4c7] rounded-[14px] p-6 relative overflow-hidden;
+    @apply flex items-center gap-6 bg-[var(--bg-secondary)] rounded-[14px] p-6 relative overflow-hidden;
   }
   .vapi-compact-header {
-    @apply flex items-center gap-2 bg-[#f3e4c7] rounded-[14px] p-3 mb-3;
+    @apply flex items-center gap-2 bg-[var(--bg-secondary)] rounded-[14px] p-3 mb-3;
   }
   .vapi-transcript-wrapper {
     @apply min-h-[400px] max-h-[60vh] flex flex-col;
@@ -406,10 +432,10 @@
     @apply absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2;
   }
   .vapi-pulse-ring {
-    @apply absolute inset-0 w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] bg-white rounded-full opacity-50 animate-ping;
+    @apply absolute inset-0 w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] bg-[var(--bg-card)] rounded-full opacity-50 animate-ping;
   }
   .vapi-mic-btn {
-    @apply relative w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] cursor-pointer rounded-full flex items-center justify-center transition-all duration-300 border-0 bg-white;
+    @apply relative w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] cursor-pointer rounded-full flex items-center justify-center transition-all duration-300 border-0 bg-[var(--bg-card)];
 
     &:hover {
       transform: scale(1.05);
@@ -425,20 +451,20 @@
     }
   }
   .vapi-mic-btn-active {
-    @apply bg-[#212a3b];
+    @apply bg-[var(--color-brand)];
   }
   .vapi-mic-btn-inactive {
-    @apply bg-white;
+    @apply bg-[var(--bg-card)];
   }
   .vapi-badge-ai {
-    @apply inline-block bg-white px-3 py-2 rounded-[4px];
+    @apply inline-block bg-[var(--bg-card)] px-3 py-2 rounded-[4px];
   }
   .vapi-badge-ai-text {
-    @apply text-sm font-medium text-[#212a3b];
+    @apply text-sm font-medium text-[var(--text-primary)];
     font-family: 'IBM Plex Serif', serif;
   }
   .vapi-status-indicator {
-    @apply flex items-center gap-2 bg-white px-3 py-2 rounded-[4px];
+    @apply flex items-center gap-2 bg-[var(--bg-card)] px-3 py-2 rounded-[4px];
   }
   .vapi-status-dot {
     @apply inline-block w-3 h-3 rounded-full;
@@ -462,21 +488,21 @@
     @apply bg-green-500 animate-pulse;
   }
   .vapi-status-text {
-    @apply text-sm font-medium text-[#212a3b];
+    @apply text-sm font-medium text-[var(--text-primary)];
     font-family: 'IBM Plex Serif', serif;
   }
   .vapi-stat-box {
-    @apply bg-white rounded-[10px] px-2.5 py-5 min-w-[225px] text-center;
+    @apply bg-[var(--bg-card)] rounded-[10px] px-2.5 py-5 min-w-[225px] text-center;
   }
   .vapi-stat-box-sm {
-    @apply bg-white rounded-[10px] px-2.5 py-5 min-w-[225px] text-center;
+    @apply bg-[var(--bg-card)] rounded-[10px] px-2.5 py-5 min-w-[225px] text-center;
   }
   .vapi-stat-label {
-    @apply text-lg font-medium text-[#212a3b] mb-3;
+    @apply text-lg font-medium text-[var(--text-primary)] mb-3;
     font-family: 'IBM Plex Serif', serif;
   }
   .vapi-stat-value-lg {
-    @apply text-[30px] font-semibold text-black leading-9;
+    @apply text-[30px] font-semibold text-[var(--text-primary)] leading-9;
     font-family: 'IBM Plex Serif', serif;
   }
   .vapi-stat-value-sm {
@@ -487,7 +513,7 @@
      BOOKS LIBRARY COMPONENT
      =========================================== */
   .library-hero-card {
-    @apply bg-[#f3e4c7] rounded-[14px] p-5 md:p-6 lg:py-6 lg:px-10 relative overflow-hidden flex items-center;
+    @apply bg-[var(--bg-secondary)] rounded-[14px] p-5 md:p-6 lg:py-6 lg:px-10 relative overflow-hidden flex items-center;
   }
   .library-hero-content {
     @apply flex flex-col items-center text-center lg:items-center lg:text-left lg:flex-row lg:justify-between gap-4 lg:gap-6 w-full;
@@ -496,10 +522,10 @@
     @apply flex-1 max-w-full lg:max-w-[400px] flex flex-col gap-3 lg:gap-4 items-center lg:items-start justify-center z-10;
   }
   .library-hero-title {
-    @apply text-[26px] md:text-3xl lg:text-4xl font-semibold text-black tracking-[-0.02em] leading-[32px] md:leading-[42px] font-serif;
+    @apply text-[26px] md:text-3xl lg:text-4xl font-semibold text-[var(--text-primary)] tracking-[-0.02em] leading-[32px] md:leading-[42px] font-serif;
   }
   .library-hero-description {
-    @apply text-sm md:text-base text-[#3d485e] leading-5 md:leading-6;
+    @apply text-sm md:text-base text-[var(--text-secondary)] leading-5 md:leading-6;
   }
   .library-hero-illustration {
     @apply flex items-center justify-center mt-2 lg:hidden;
@@ -508,25 +534,25 @@
     @apply hidden lg:flex items-center justify-center flex-1 max-w-[400px];
   }
   .library-cta-primary {
-    @apply inline-flex items-center justify-center gap-2 bg-white text-[var(--text-primary)] px-5 py-3 rounded-[10px] font-bold text-base md:text-xl transition-all w-full lg:w-fit;
+    @apply inline-flex items-center justify-center gap-2 bg-[var(--bg-card)] text-[var(--text-primary)] px-5 py-3 rounded-[10px] font-bold text-base md:text-xl transition-all w-full lg:w-fit;
     font-family: 'IBM Plex Serif', serif;
 
     &:hover {
-      @apply bg-gray-50;
+      @apply bg-[var(--bg-secondary)];
       box-shadow: var(--shadow-soft);
     }
   }
   .library-cta-secondary {
-    @apply inline-flex items-center gap-2 bg-white text-[var(--text-primary)] px-5 py-3 rounded-[10px] font-bold text-xl transition-all;
+    @apply inline-flex items-center gap-2 bg-[var(--bg-card)] text-[var(--text-primary)] px-5 py-3 rounded-[10px] font-bold text-xl transition-all;
     font-family: 'IBM Plex Serif', serif;
 
     &:hover {
-      @apply bg-gray-50;
+      @apply bg-[var(--bg-secondary)];
       box-shadow: var(--shadow-soft);
     }
   }
   .library-steps-card {
-    @apply bg-white p-4 rounded-[10px];
+    @apply bg-[var(--bg-card)] p-4 rounded-[10px];
     list-style: none;
   }
   .library-steps-card div {
@@ -537,16 +563,16 @@
     list-style: none;
   }
   .library-step-number {
-    @apply w-8 h-8 min-w-8 min-h-8 rounded-full bg-[#fff6e5] border border-[var(--text-primary)] text-[var(--text-primary)] flex items-center justify-center font-semibold text-sm;
+    @apply w-8 h-8 min-w-8 min-h-8 rounded-full bg-[var(--accent-light)] border border-[var(--text-primary)] text-[var(--text-primary)] flex items-center justify-center font-semibold text-sm;
   }
   .library-step-title {
-    @apply font-semibold text-base text-[#222c37] leading-6;
+    @apply font-semibold text-base text-[var(--text-muted)] leading-6;
   }
   .library-step-description {
-    @apply font-normal text-sm text-[#222c37] leading-5;
+    @apply font-normal text-sm text-[var(--text-muted)] leading-5;
   }
   .library-search-wrapper {
-    @apply flex items-center bg-white border border-[var(--border-subtle)] rounded-lg overflow-hidden w-full sm:w-80;
+    @apply flex items-center bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-lg overflow-hidden w-full sm:w-80;
   }
   .library-search-input {
     @apply flex-1 py-2 px-4 outline-none text-[var(--text-primary)] placeholder:text-[var(--text-muted)];
@@ -562,7 +588,7 @@
      TRANSCRIPT COMPONENT
      =========================================== */
   .transcript-container {
-    @apply w-full bg-white rounded-[14px] h-full min-h-0 flex flex-col;
+    @apply w-full bg-[var(--bg-card)] rounded-[14px] h-full min-h-0 flex flex-col;
   }
   .transcript-messages {
     @apply flex flex-col gap-4 sm:gap-6 p-4 sm:p-6 flex-1 overflow-y-auto scroll-smooth;
@@ -595,10 +621,10 @@
     @apply max-w-[80%] px-6 py-4 text-base font-medium leading-7 rounded-2xl;
   }
   .transcript-bubble-user {
-    @apply bg-[#663820] text-white rounded-br-sm;
+    @apply bg-[var(--color-brand)] text-white rounded-br-sm;
   }
   .transcript-bubble-assistant {
-    @apply bg-[#f3e4c7] text-[#212a3b] rounded-bl-sm;
+    @apply bg-[var(--bg-secondary)] text-[var(--text-primary)] rounded-bl-sm;
   }
   .transcript-cursor {
     @apply inline-block w-0.5 h-5 ml-1 bg-black animate-pulse;
@@ -632,7 +658,7 @@
     @apply bg-[var(--accent-light)] border-[var(--accent-warm)];
   }
   .voice-selector-option-default {
-    @apply bg-white;
+    @apply bg-[var(--bg-card)];
 
     &:hover {
       @apply bg-[var(--bg-secondary)];
@@ -662,7 +688,7 @@
     @apply absolute -left-1 top-2 bottom-2 w-3 bg-gradient-to-r from-[#8B7355] to-[#A08060] rounded-l-md z-0;
   }
   .book-card-cover-wrapper {
-    @apply relative bg-white rounded-[14px] overflow-hidden flex items-center justify-center h-[205px] md:h-[240px];
+    @apply relative bg-[var(--bg-card)] rounded-[14px] overflow-hidden flex items-center justify-center h-[205px] md:h-[240px];
   }
   .book-card-cover {
     @apply w-auto h-[170px] md:h-[200px] object-cover rounded-lg;
@@ -672,41 +698,41 @@
     @apply mt-4 md:mt-5 flex-1 flex flex-col gap-1;
   }
   .book-card-title {
-    @apply font-bold text-[#212a3b] line-clamp-1 text-base md:text-xl leading-[22px] md:leading-[30px];
+    @apply font-bold text-[var(--text-primary)] line-clamp-1 text-base md:text-xl leading-[22px] md:leading-[30px];
     font-family: 'IBM Plex Serif', serif;
   }
   .book-card-author {
-    @apply text-sm md:text-base font-medium text-[#3d485e] line-clamp-1;
+    @apply text-sm md:text-base font-medium text-[var(--text-secondary)] line-clamp-1;
   }
 
   /* ===========================================
      UPLOAD FORM COMPONENT
      =========================================== */
   .upload-dropzone {
-    @apply flex flex-col items-center justify-center h-[165px] bg-white rounded-[6px] cursor-pointer transition-all;
+    @apply flex flex-col items-center justify-center h-[165px] bg-[var(--bg-card)] rounded-[6px] cursor-pointer transition-all;
 
     &:hover {
-      @apply bg-gray-50;
+      @apply bg-[var(--bg-secondary)];
     }
   }
   .upload-dropzone-uploaded {
-    @apply bg-[#f3e4c7];
+    @apply bg-[var(--bg-secondary)];
 
     .upload-dropzone-text {
-      @apply text-[#663820];
+      @apply text-[var(--color-brand)];
     }
     .upload-dropzone-hint {
-      @apply text-[#8B7355];
+      @apply text-[var(--text-secondary)];
     }
   }
   .upload-dropzone-icon {
-    @apply w-[48px] h-[48px] mb-2 text-[#8B7355];
+    @apply w-[48px] h-[48px] mb-2 text-[var(--text-secondary)];
   }
   .upload-dropzone-text {
-    @apply text-[#777] text-lg font-medium text-center;
+    @apply text-[var(--text-muted)] text-lg font-medium text-center;
   }
   .upload-dropzone-hint {
-    @apply text-[#777] text-sm mt-1;
+    @apply text-[var(--text-muted)] text-sm mt-1;
   }
   .upload-dropzone-remove {
     @apply flex items-center justify-center w-6 h-6 text-red-500 transition-colors cursor-pointer;
@@ -716,17 +742,17 @@
     }
   }
   .form-label {
-    @apply text-lg font-medium text-black mb-2 block;
+    @apply text-lg font-medium text-[var(--text-primary)] mb-2 block;
   }
   .form-input {
-    @apply w-full p-4 bg-white rounded-lg text-lg font-medium text-[#222] placeholder:text-[#999];
+    @apply w-full p-4 bg-[var(--bg-card)] rounded-lg text-lg font-medium text-[var(--text-primary)] placeholder:text-[var(--text-muted)];
   }
 
   /* ===========================================
      BACK BUTTON (FLOATING)
      =========================================== */
   .back-btn-floating {
-    @apply fixed top-24 left-6 z-50 size-12 rounded-full bg-white border border-[var(--border-subtle)] flex items-center justify-center transition-all;
+    @apply fixed top-24 left-6 z-50 size-12 rounded-full bg-[var(--bg-card)] border border-[var(--border-subtle)] flex items-center justify-center transition-all;
     box-shadow: var(--shadow-soft);
 
     &:hover {
@@ -741,12 +767,12 @@
   border: none !important;
   box-shadow: var(--shadow-soft) !important;
   border-radius: 0.75rem !important;
-  background-color: #212a3b !important;
+  background-color: var(--color-brand) !important;
   color: white !important;
 }
 
 .cl-formButtonPrimary:hover {
-  background-color: #3d485e !important;
+  background-color: var(--color-brand-hover) !important;
   box-shadow: var(--shadow-soft-md) !important;
 }
 
@@ -775,13 +801,13 @@
   position: relative !important;
   z-index: 10 !important;
   border: 1px solid var(--border-subtle) !important;
-  background-color: white !important;
+  background-color: var(--bg-card) !important;
   box-shadow: var(--shadow-soft-sm) !important;
   border-radius: 0.75rem !important;
 }
 
 .cl-formFieldInput:focus {
-  border-color: #212a3b !important;
+  border-color: var(--text-primary) !important;
   box-shadow: var(--shadow-soft), 0 0 0 2px rgba(33, 42, 59, 0.1) !important;
 }
 
@@ -828,7 +854,7 @@
   z-index: 1;
   border: 1px solid var(--border-subtle) !important;
   border-radius: 1rem !important;
-  background-color: white !important;
+  background-color: var(--bg-card) !important;
   box-shadow: var(--shadow-soft-md) !important;
 }
 
@@ -880,13 +906,13 @@ button[data-variant='unstyled'] *,
 .cl-tabButton *,
 [role='tablist'] button,
 [role='tablist'] button * {
-  color: #212a3b !important;
+  color: var(--text-primary) !important;
 }
 
 /* Card sections have white background */
 .clerk-pricing-table-wrapper [class*='card'] > *,
 .clerk-pricing-table-wrapper > div > div > div > * {
-  background-color: white !important;
+  background-color: var(--bg-card) !important;
 }
 
 /* All buttons */
@@ -894,7 +920,7 @@ button[data-variant='unstyled'] *,
   height: 3rem !important;
   min-height: 3rem !important;
   font-size: 1.125rem !important;
-  background-color: #212a3b !important;
+  background-color: var(--color-brand) !important;
   color: white !important;
   font-weight: 500 !important;
   border: none !important;
@@ -905,7 +931,7 @@ button[data-variant='unstyled'] *,
 }
 
 .clerk-pricing-table-wrapper button:hover {
-  background-color: #3d485e !important;
+  background-color: var(--color-brand-hover) !important;
   box-shadow: var(--shadow-soft-md) !important;
   transform: translateY(-1px);
 }
@@ -914,8 +940,8 @@ button[data-variant='unstyled'] *,
 .clerk-pricing-table-wrapper button:disabled,
 .clerk-pricing-table-wrapper button[disabled],
 .clerk-pricing-table-wrapper button[aria-disabled='true'] {
-  background-color: #f3e4c7 !important;
-  color: #212a3b !important;
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
   cursor: default !important;
   box-shadow: none !important;
   opacity: 1 !important;
@@ -927,14 +953,14 @@ button[data-variant='unstyled'] *,
    Note: This uses :first-child which assumes active plan is always first.
    If Clerk changes the order, this may highlight the wrong card. */
 .cl-pricingTableCard:first-child {
-  border: 2px solid #663820 !important;
+  border: 2px solid var(--color-brand) !important;
 }
 
 /* Style the Active badge with better contrast */
 .cl-badge,
 .cl-pricingTableCard [class*='badge'],
 .cl-pricingTableCard span[class*='Badge'] {
-  background-color: #663820 !important;
+  background-color: var(--color-brand) !important;
   color: white !important;
   font-weight: 600 !important;
   padding: 0.25rem 0.75rem !important;
@@ -950,8 +976,8 @@ button[data-variant='unstyled'] *,
   text-align: center;
   padding: 0.75rem 1.5rem;
   margin-top: 1rem;
-  background-color: #f3e4c7 !important;
-  color: #212a3b !important;
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
   font-weight: 600;
   border-radius: 0.75rem;
   font-size: 1.125rem;
