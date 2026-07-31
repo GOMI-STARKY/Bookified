@@ -11,7 +11,8 @@ const nextConfig: NextConfig = {
             // eval()-wrapped modules for dev bundles (loses dev source maps).
             config.devtool = false;
             config.plugins = config.plugins.filter(
-                (plugin) => plugin?.constructor?.name !== 'EvalSourceMapDevToolPlugin'
+                (plugin: { constructor?: { name?: string } }) =>
+                    plugin?.constructor?.name !== 'EvalSourceMapDevToolPlugin'
             );
         }
         return config;
