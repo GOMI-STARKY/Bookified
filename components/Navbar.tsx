@@ -5,6 +5,7 @@ import Image from "next/image";
 import {usePathname} from "next/navigation";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import {cn} from "@/lib/utils";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const navItems = [
     { label: "Library", href: "/" },
@@ -37,6 +38,7 @@ const Navbar = () => {
                     })}
 
                     <div className="flex gap-7.5 items-center">
+                        <ThemeToggle />
                         <SignedOut>
                             <SignInButton mode="modal" />
                         </SignedOut>
