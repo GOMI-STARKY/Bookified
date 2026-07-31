@@ -221,8 +221,8 @@ export const saveBookSegments = async (bookId: string, clerkId: string, segments
     }
 }
 
-// Get all segments for a book (for embedding in AI context)
-export const getBookContent = async (bookId: string): Promise<{ success: boolean; content?: string; error?: string }> => {
+// Get segments for a book (for embedding in AI context)
+export const getBookContent = async (bookId: string, maxSegments: number = 100): Promise<{ success: boolean; content?: string; error?: string }> => {
     try {
         await connectToDatabase();
 
@@ -230,7 +230,7 @@ export const getBookContent = async (bookId: string): Promise<{ success: boolean
         const segments = await BookSegment.find({ bookId: bookObjectId })
             .select('content segmentIndex pageNumber')
             .sort({ segmentIndex: 1 })
-            .limit(100)
+            .limit(maxSegments)
             .lean();
 
         if (!segments.length) {

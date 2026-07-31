@@ -5,6 +5,7 @@ import Vapi from '@vapi-ai/web';
 import { useAuth } from '@clerk/nextjs';
 
 import { useSubscription } from '@/hooks/useSubscription';
+import { PLANS } from '@/lib/subscription-constants';
 import { DEFAULT_VOICE, VOICE_SETTINGS } from '@/lib/constants';
 import { getVoice } from '@/lib/utils';
 import { IBook, Messages } from '@/types';
@@ -36,7 +37,7 @@ export type CallStatus = 'idle' | 'connecting' | 'starting' | 'listening' | 'thi
 
 export function useVapi(book: IBook) {
     const { userId } = useAuth();
-    const { limits } = useSubscription();
+    const { plan, limits } = useSubscription();
 
     const [status, setStatus] = useState<CallStatus>('idle');
     const [messages, setMessages] = useState<Messages[]>([]);
@@ -229,14 +230,47 @@ export function useVapi(book: IBook) {
 
             pendingSessionRef.current = { userId, bookId: book._id };
 
-            const contentResult = await getBookContent(book._id);
+            const isPaid = plan === PLANS.STANDARD || plan === PLANS.PRO;
+
+            const contentResult = await getBookContent(book._id, 100);
             const bookContent = contentResult.success && contentResult.content
                 ? contentResult.content
                 : 'No book content available.';
 
+            const toolCalls = isPaid ? [
+                {
+                    type: 'function' as const,
+                    function: {
+                        name: 'searchBook',
+                        description: 'Search for specific content, passages, or information anywhere within the uploaded book. Use this when the user asks about topics, quotes, characters, or events that are not covered in the provided book content.',
+                        parameters: {
+                            type: 'object',
+                            properties: {
+                                bookId: {
+                                    type: 'string',
+                                    description: 'The ID of the book to search in',
+                                },
+                                query: {
+                                    type: 'string',
+                                    description: 'The search query - what content to find in the book',
+                                },
+                            },
+                            required: ['bookId', 'query'],
+                        },
+                    },
+                    server: {
+                        url: `${typeof window !== 'undefined' ? window.location.origin : ''}/api/vapi/search-book`,
+                    },
+                },
+            ] : undefined;
+
+            const contentLabel = isPaid
+                ? `Here is the opening of the book. The user may ask about any part of it — including sections beyond this opening.`
+                : `Here is part of the book content (the free preview, roughly the first 200 pages).`;
+
             const systemPrompt = `You are a knowledgeable book assistant for the app Bookified. You are discussing the book "${book.title}" by ${book.author}.
 
-Here is the full content of the book you are helping the user discuss. Use ONLY this content to answer questions — do not make things up.
+${contentLabel}
 
 --- BOOK CONTENT ---
 ${bookContent}
@@ -247,9 +281,11 @@ Instructions:
 - Reference specific passages, pages, and quotes from the book when possible
 - Be conversational, warm, and insightful
 - Help the user explore themes, characters, plot points, and key ideas
-- If the user asks about something not covered in the book content, let them know gently
 - Keep responses concise and natural for voice conversation (2-4 sentences max)
-- Never fabricate quotes or passages - only reference what's in the book content above`;
+- Never fabricate quotes or passages - only reference what's in the book content above
+${isPaid
+    ? `- If the user asks about something not covered in the content above, use the searchBook tool to look it up in the rest of the book. The book ID to pass to searchBook is "${book._id}".`
+    : `- If the user asks about something not covered in the free preview, let them know it is only available on a paid plan.`}`;
 
             await getVapi().start({
                 firstMessage: `Hey, good to meet you! I've read "${book.title}" by ${book.author} and I'm ready to discuss it. What would you like to talk about?`,
@@ -271,13 +307,14 @@ Instructions:
                     style: VOICE_SETTINGS.style,
                     useSpeakerBoost: VOICE_SETTINGS.useSpeakerBoost,
                 },
+                ...(toolCalls ? { toolCalls } : {}),
             });
         } catch (err) {
             console.error('Failed to start call:', err);
             setStatus('idle');
             setLimitError('Failed to start voice session. Please try again.');
         }
-    }, [book._id, book.title, book.author, voice, userId]);
+    }, [book._id, book.title, book.author, voice, userId, plan]);
 
     const stop = useCallback(() => {
         isStoppingRef.current = true;

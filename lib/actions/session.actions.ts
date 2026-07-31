@@ -5,6 +5,7 @@ import {connectToDatabase} from "@/database/mongoose";
 import VoiceSession from "@/database/models/voice-session.model";
 import {getUserPlan} from "@/lib/subscription.server";
 import {PLAN_LIMITS, getCurrentBillingPeriodStart} from "@/lib/subscription-constants";
+import {serializeData} from "@/lib/utils";
 
 export const checkSessionLimit = async (clerkId: string): Promise<{ allowed: boolean; error?: string; isBillingError?: boolean }> => {
     try {
@@ -90,5 +91,24 @@ export const cleanupFailedSessions = async (clerkId: string): Promise<void> => {
         });
     } catch (e) {
         console.error('Error cleaning up failed sessions', e);
+    }
+}
+
+export const getVoiceSessions = async (clerkId: string) => {
+    try {
+        await connectToDatabase();
+
+        const sessions = await VoiceSession.find({ clerkId })
+            .sort({ startedAt: -1 })
+            .populate('bookId', 'title slug coverURL')
+            .lean();
+
+        return {
+            success: true,
+            data: serializeData(sessions),
+        };
+    } catch (e) {
+        console.error('Error fetching voice sessions', e);
+        return { success: false, error: 'Failed to fetch session history.' };
     }
 }
