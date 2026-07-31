@@ -18,7 +18,7 @@ const Navbar = () => {
     const { user } = useUser();
 
     return (
-        <header className="navbar-shell w-full fixed z-50">
+        <header className="w-full fixed z-50 bg-(--bg-primary)">
             <div className="wrapper navbar-height py-4 flex justify-between items-center">
                 <Link href="/" className="flex gap-0.5 items-center">
                     <Image src="/assets/logo.png" alt="Bookified" width={42} height={26} />
@@ -30,7 +30,7 @@ const Navbar = () => {
                         const isActive = pathName === href || (href !== '/' && pathName.startsWith(href));
 
                         return (
-                            <Link href={href} key={label} className={cn('nav-link-base', isActive ? 'nav-link-active' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:opacity-100')}>
+                            <Link href={href} key={label} className={cn('nav-link-base', isActive ? 'nav-link-active' : 'text-black hover:opacity-70')}>
                                 {label}
                             </Link>
                         )

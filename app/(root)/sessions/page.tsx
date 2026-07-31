@@ -81,7 +81,7 @@ export default async function SessionsPage() {
                                         className="rounded-md object-cover"
                                     />
                                 ) : (
-                                    <div className="w-12 h-16 rounded-md bg-[var(--bg-secondary)] shrink-0" />
+                                    <div className="w-12 h-16 rounded-md bg-gray-100 shrink-0" />
                                 )}
 
                                 <div className="flex-1 min-w-0">
@@ -89,7 +89,7 @@ export default async function SessionsPage() {
                                         {book ? (
                                             <Link
                                                 href={`/books/${book.slug}`}
-                                                className="hover:underline text-[var(--text-primary)] hover:text-[var(--color-brand)]"
+                                                className="hover:underline text-[#212a3b]"
                                             >
                                                 {book.title}
                                             </Link>

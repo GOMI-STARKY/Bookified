@@ -31,7 +31,7 @@ const Transcript = ({ messages, currentMessage, currentUserMessage }: Transcript
   if (isEmpty) {
     return (
       <div className="transcript-empty">
-        <Mic className="size-12 text-[var(--text-muted)] mb-4" />
+        <Mic className="size-12 text-[#212a3b] mb-4" />
         <h2 className="transcript-empty-text"><b>No conversation yet</b></h2>
         <p className="transcript-empty-hint">
           Click the mic button above to start talking

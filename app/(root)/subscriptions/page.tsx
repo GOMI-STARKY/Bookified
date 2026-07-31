@@ -23,12 +23,12 @@ export default function SubscriptionsPage() {
           return (
             <div
               key={key}
-              className={`border rounded-xl p-6 flex flex-col relative shadow-soft-sm ${
-                popular ? "border-2 border-[var(--color-brand)] shadow-soft-md" : ""
+              className={`border rounded-xl p-6 flex flex-col relative ${
+                popular ? "border-2 border-[#212a3b]" : ""
               }`}
             >
               {popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[var(--color-brand)] text-white text-xs px-3 py-1 rounded-full shadow-soft-sm">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#212a3b] text-white text-xs px-3 py-1 rounded-full">
                   Popular
                 </span>
               )}
@@ -45,10 +45,10 @@ export default function SubscriptionsPage() {
                 <li>{limits.hasSessionHistory ? "Session history" : "No session history"}</li>
               </ul>
               <button
-                className={`w-full py-2 rounded-lg font-medium transition-all duration-200 ${
+                className={`w-full py-2 rounded-lg font-medium ${
                   key === PLANS.FREE
-                    ? "border border-[var(--border-medium)] text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]"
-                    : "bg-[var(--bg-secondary)] text-[var(--text-muted)] opacity-60 cursor-not-allowed"
+                    ? "border text-[#212a3b]"
+                    : "bg-[#212a3b] text-white opacity-60 cursor-not-allowed"
                 }`}
                 disabled={key !== PLANS.FREE}
               >

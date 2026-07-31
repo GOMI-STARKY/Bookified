@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Serif, Mona_Sans} from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import { ThemeProvider } from "next-themes";
 
 import Navbar from "@/components/Navbar";
 import "./globals.css";
@@ -32,15 +31,13 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-        <html lang="en" suppressHydrationWarning>
+        <html lang="en">
           <body
             className={`${ibmPlexSerif.variable} ${monaSans.variable} relative font-sans antialiased`}
           >
-            <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-              <Navbar />
-              {children}
-              <Toaster />
-            </ThemeProvider>
+            <Navbar />
+            {children}
+            <Toaster />
           </body>
         </html>
     </ClerkProvider>

@@ -26,17 +26,17 @@ interface LoadingOverlayProps {
 const LoadingOverlay = ({ currentStep, completedSteps, error }: LoadingOverlayProps) => {
     return (
         <div className="loading-wrapper">
-            <div className="loading-shadow-wrapper bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-soft-lg">
+            <div className="loading-shadow-wrapper bg-white shadow-soft-lg">
                 <div className="loading-shadow">
-                    <Loader2 className="loading-animation w-12 h-12 text-[var(--color-brand)]" />
+                    <Loader2 className="loading-animation w-12 h-12 text-[#663820]" />
                     <h2 className="loading-title">Synthesizing Your Book</h2>
-                    <p className="text-[var(--text-muted)] text-center max-w-xs mb-4">
+                    <p className="text-[#777] text-center max-w-xs mb-4">
                         {error ? 'Something went wrong' : 'Please wait while we process your PDF'}
                     </p>
 
                     {error ? (
                         <div className="w-full max-w-xs">
-                            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm text-center">
+                            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm text-center">
                                 {error}
                             </div>
                         </div>
@@ -52,23 +52,23 @@ const LoadingOverlay = ({ currentStep, completedSteps, error }: LoadingOverlayPr
                                         key={step.id}
                                         className={cn(
                                             'flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300',
-                                            isCurrent && 'bg-[var(--accent-light)]',
+                                            isCurrent && 'bg-[#f3e4c7]',
                                             isCompleted && 'opacity-60',
                                             !isCurrent && !isCompleted && 'opacity-40'
                                         )}
                                     >
                                         <div className="w-6 h-6 flex items-center justify-center shrink-0">
                                             {isCompleted ? (
-                                                <Check className="w-4 h-4 text-[var(--color-brand)]" />
+                                                <Check className="w-4 h-4 text-[#663820]" />
                                             ) : isCurrent ? (
-                                                <Loader2 className="w-4 h-4 text-[var(--color-brand)] animate-spin" />
+                                                <Loader2 className="w-4 h-4 text-[#663820] animate-spin" />
                                             ) : (
-                                                <StepIcon className="w-4 h-4 text-[var(--text-muted)]" />
+                                                <StepIcon className="w-4 h-4 text-[#8B7355]" />
                                             )}
                                         </div>
                                         <span className={cn(
                                             'text-sm font-medium',
-                                            isCurrent ? 'text-[var(--color-brand)]' : 'text-[var(--text-muted)]'
+                                            isCurrent ? 'text-[#663820]' : 'text-[#777]'
                                         )}>
                                             {step.label}
                                         </span>

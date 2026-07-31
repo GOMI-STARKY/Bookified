@@ -1,6 +1,6 @@
 // Brand color - used in JS files where CSS variables aren't available
-export const BRAND_COLOR = '#4F8CFF'; // Blue
-export const BRAND_COLOR_HOVER = '#6AA2FF'; // Light blue
+export const BRAND_COLOR = '#212a3b'; // Dark blue-gray
+export const BRAND_COLOR_HOVER = '#3d485e'; // Medium blue-gray
 
 // File validation helpers
 export const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -77,21 +77,22 @@ export const VAPI_DASHBOARD_CONFIG = {
     fillerInjectionEnabled: false,
 };
 
-// Clerk appearance overrides - Premium Dark Style
+// Clerk appearance overrides - Warm Literary Style
+// Note: Tailwind requires static class names at build time, so we hardcode color values here
 export const CLERK_AUTH_APPEARANCE_OVERRIDE = {
     rootBox: 'mx-auto',
     card: 'shadow-none border-none rounded-xl bg-transparent',
-    headerTitle: '!text-2xl font-bold text-[var(--text-primary)]',
-    headerSubtitle: '!mt-3 !text-sm text-[var(--text-secondary)]',
+    headerTitle: '!text-2xl font-bold text-[#212a3b]',
+    headerSubtitle: '!mt-3 !text-sm text-[#3d485e]',
     socialButtonsBlockButton:
-        '!border border-[var(--border-subtle)] hover:bg-[var(--accent-light)] transition-all h-12 text-lg !rounded-xl shadow-[var(--shadow-soft-sm)]',
-    socialButtonsBlockButtonText: 'font-medium !text-[var(--text-primary)] !text-lg',
+        '!border border-[rgba(33,42,59,0.12)] hover:bg-[#212a3b]/10 transition-all h-12 text-lg !rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.08)]',
+    socialButtonsBlockButtonText: 'font-medium !text-[#212a3b] !text-lg',
     formButtonPrimary:
-        'bg-[var(--color-brand)] hover:bg-[var(--color-brand-hover)] text-white font-medium !border-0 shadow-[var(--shadow-soft)] normal-case !h-12 !text-lg !rounded-xl',
+        'bg-[#212a3b] hover:bg-[#3d485e] text-white font-medium !border-0 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.08)] normal-case !h-12 !text-lg !rounded-xl',
     formFieldInput:
-        '!border !border-[var(--border-subtle)] !rounded-xl focus:ring-[var(--color-brand)] focus:border-[var(--color-brand)] !h-12 !min-h-12 !text-lg !bg-[var(--bg-card)] shadow-[var(--shadow-soft-sm)]',
-    formFieldLabel: 'text-[var(--text-primary)] font-medium text-lg',
-    footerActionLink: 'text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] text-base font-medium',
+        '!border !border-[rgba(33,42,59,0.12)] !rounded-xl focus:ring-[#212a3b] focus:border-[#212a3b] !h-12 !min-h-12 !text-lg !bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_1px_3px_rgba(0,0,0,0.06)]',
+    formFieldLabel: 'text-[#212a3b] font-medium text-lg',
+    footerActionLink: 'text-[#212a3b] hover:text-[#3d485e] text-base font-medium',
 };
 
 

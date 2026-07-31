@@ -108,10 +108,7 @@ function generatePlaceholderCover(): string {
   canvas.height = 800;
   const ctx = canvas.getContext('2d');
   if (ctx) {
-    const gradient = ctx.createLinearGradient(0, 0, 0, 800);
-    gradient.addColorStop(0, '#4f8cff');
-    gradient.addColorStop(1, '#2f6bed');
-    ctx.fillStyle = gradient;
+    ctx.fillStyle = '#212a3b';
     ctx.fillRect(0, 0, 600, 800);
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 36px sans-serif';
