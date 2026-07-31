@@ -5,8 +5,20 @@ export const BRAND_COLOR_HOVER = '#3d485e'; // Medium blue-gray
 // File validation helpers
 export const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 export const ACCEPTED_PDF_TYPES = ['application/pdf'];
+export const ACCEPTED_EPUB_TYPES = ['application/epub+zip'];
+export const ACCEPTED_TXT_TYPES = ['text/plain'];
+export const ACCEPTED_BOOK_TYPES = [...ACCEPTED_PDF_TYPES, ...ACCEPTED_EPUB_TYPES, ...ACCEPTED_TXT_TYPES];
+export const ACCEPTED_BOOK_EXTENSIONS = ['.pdf', '.epub', '.txt'];
+export const BOOK_FILE_ACCEPT = ['application/pdf', '.pdf', 'application/epub+zip', '.epub', 'text/plain', '.txt'];
 export const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+// Match book files by MIME type or extension (extensions cover OS/browser MIME quirks)
+export function isAcceptedBookFile(file: { name: string; type: string }): boolean {
+  if (ACCEPTED_BOOK_TYPES.includes(file.type)) return true;
+  const lower = file.name.toLowerCase();
+  return ACCEPTED_BOOK_EXTENSIONS.some((ext) => lower.endsWith(ext));
+}
 
 // Pre-configured VAPI assistant ID (hardcoded for this app)
 export const ASSISTANT_ID = process.env.NEXT_PUBLIC_ASSISTANT_ID!;

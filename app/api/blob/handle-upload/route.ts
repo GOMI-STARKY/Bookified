@@ -21,10 +21,13 @@ export async function POST(request: Request): Promise<NextResponse> {
         return {
           allowedContentTypes: [
             "application/pdf",
+            "application/epub+zip",
+            "text/plain",
             "image/png",
             "image/jpeg",
             "image/jpg",
             "image/webp",
+            "image/gif",
           ],
           maximumSizeInBytes: 50 * 1024 * 1024,
           addRandomSuffix: true,

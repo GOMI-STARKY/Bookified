@@ -9,7 +9,7 @@ import { BookUploadFormValues } from '@/types';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ACCEPTED_PDF_TYPES, ACCEPTED_IMAGE_TYPES } from '@/lib/constants';
+import { BOOK_FILE_ACCEPT, ACCEPTED_IMAGE_TYPES } from '@/lib/constants';
 import FileUploader from './FileUploader';
 import VoiceSelector from './VoiceSelector';
 import LoadingOverlay from './LoadingOverlay';
@@ -17,7 +17,7 @@ import {useAuth} from "@clerk/nextjs";
 import { toast } from 'sonner';
 import {checkBookExists, createBook, saveBookSegments} from "@/lib/actions/book.actions";
 import {useRouter} from "next/navigation";
-import {parsePDFFile} from "@/lib/utils";
+import {parseBookFile} from "@/lib/utils";
 import {upload as blobUpload} from "@vercel/blob/client";
 
 async function uploadFile(file: File): Promise<{ url: string; pathname: string }> {
@@ -51,7 +51,7 @@ const UploadForm = () => {
             title: '',
             author: '',
             persona: '',
-            pdfFile: undefined,
+            bookFile: undefined,
             coverImage: undefined,
         },
     });
@@ -76,35 +76,35 @@ const UploadForm = () => {
             }
 
             const fileTitle = data.title.replace(/\s+/g, '-').toLowerCase();
-            const pdfFile = data.pdfFile;
+            const bookFile = data.bookFile;
 
-            // Step 1: Parse PDF
+            // Step 1: Parse book file
             setCurrentStep('parsing');
-            let parsedPDF;
+            let parsedBook;
             try {
-                parsedPDF = await parsePDFFile(pdfFile);
+                parsedBook = await parseBookFile(bookFile);
             } catch (e) {
-                const msg = e instanceof Error ? e.message : 'Failed to parse PDF file';
+                const msg = e instanceof Error ? e.message : 'Failed to parse book file';
                 setUploadError(msg);
                 toast.error(msg);
                 return;
             }
             advanceStep('parsing');
 
-            if(parsedPDF.content.length === 0) {
-                const msg = "No readable text found in this PDF. It may be a scanned image — please try a different file.";
+            if(parsedBook.content.length === 0) {
+                const msg = "No readable text found in this file. It may be a scanned image — please try a different file.";
                 setUploadError(msg);
                 toast.error(msg);
                 return;
             }
 
-            // Step 2: Upload PDF file
+            // Step 2: Upload book file
             setCurrentStep('uploading-file');
             let uploadedPdf;
             try {
-                uploadedPdf = await uploadFile(pdfFile);
+                uploadedPdf = await uploadFile(bookFile);
             } catch (e) {
-                const msg = e instanceof Error ? e.message : 'Failed to upload PDF file';
+                const msg = e instanceof Error ? e.message : 'Failed to upload book file';
                 setUploadError(msg);
                 toast.error(msg);
                 return;
@@ -120,7 +120,7 @@ const UploadForm = () => {
                     const uploadedCover = await uploadFile(data.coverImage);
                     coverUrl = uploadedCover.url;
                 } else {
-                    const response = await fetch(parsedPDF.cover);
+                    const response = await fetch(parsedBook.cover);
                     const blob = await response.blob();
                     const coverFile = new File([blob], `${fileTitle}_cover.png`, { type: 'image/png' });
                     const uploadedCover = await uploadFile(coverFile);
@@ -144,7 +144,7 @@ const UploadForm = () => {
                 fileURL: uploadedPdf.url,
                 fileBlobKey: uploadedPdf.pathname,
                 coverURL: coverUrl,
-                fileSize: pdfFile.size,
+                fileSize: bookFile.size,
             });
 
             if(!book.success) {
@@ -173,7 +173,7 @@ const UploadForm = () => {
 
             // Step 5: Save segments
             setCurrentStep('saving-segments');
-            const segments = await saveBookSegments(book.data._id, userId, parsedPDF.content);
+            const segments = await saveBookSegments(book.data._id, userId, parsedBook.content);
 
             if(!segments.success) {
                 let msg = "Book was created but segments could not be saved. Your book may still work.";
@@ -214,15 +214,15 @@ const UploadForm = () => {
             <div className="new-book-wrapper">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                        {/* 1. PDF File Upload */}
+                        {/* 1. Book File Upload */}
                         <FileUploader
                             control={form.control}
-                            name="pdfFile"
-                            label="Book PDF File"
-                            acceptTypes={ACCEPTED_PDF_TYPES}
+                            name="bookFile"
+                            label="Book File"
+                            acceptTypes={BOOK_FILE_ACCEPT}
                             icon={Upload}
-                            placeholder="Click to upload PDF"
-                            hint="PDF file (max 50MB)"
+                            placeholder="Click to upload PDF, EPUB, or TXT"
+                            hint="PDF, EPUB or TXT file (max 50MB)"
                             disabled={isSubmitting}
                         />
 
