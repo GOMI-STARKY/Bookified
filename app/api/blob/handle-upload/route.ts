@@ -27,6 +27,7 @@ export async function POST(request: Request): Promise<NextResponse> {
             "image/webp",
           ],
           maximumSizeInBytes: 50 * 1024 * 1024,
+          addRandomSuffix: true,
         };
       },
     });
