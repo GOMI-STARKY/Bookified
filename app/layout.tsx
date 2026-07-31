@@ -36,7 +36,7 @@ export default function RootLayout({
           <body
             className={`${ibmPlexSerif.variable} ${monaSans.variable} relative font-sans antialiased`}
           >
-            <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+            <ThemeProvider attribute="class" forcedTheme="dark">
               <Navbar />
               {children}
               <Toaster />
